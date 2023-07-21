@@ -10,16 +10,30 @@ export async function getCabins() {
   return data;
 }
 
-export async function createNewCabin(newCabin) {
+export async function createNewCabin(newCabin,id) {
+
+  const hasImagePath=newCabin.image?.startsWith?.(supabaseUrl)
   //1) create cabin
   const imageName=`${Math.random()}-${newCabin.image.name}`.replaceAll("/","")
-  const imagePath=`${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`
+  const imagePath=hasImagePath ? newCabin.image : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`
 
-  const { data, error } = await supabase.from("cabins").insert([{...newCabin,image:imagePath}]);
+  let query=supabase.from('cabins')
+
+  //CREATE
+  if(!id) query=query.insert([{...newCabin,image:imagePath}])
+  //UPDATE
+  if(id) query=query.update({...newCabin,image:imagePath}).eq("id",id)
+
+  const {data,error}=await query.select().single()
+
   if (error) {
     console.error(error.message);
     throw new Error("New cabin could not be created");
   }
+  
+  if(hasImagePath) return data
+
+  //if it is file is there only need to execute
   const {data:uploadData,error:storageError} = await supabase
   .storage
   .from('cabin-images')
