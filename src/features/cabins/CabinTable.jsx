@@ -1,23 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import styled from "styled-components";
-import { getCabins } from "../../services/apicabins";
 import Spinner from "../../ui/Spinner";
 import CabinRow from "./CabinRow";
 import Table from "../../ui/Table";
 import Menus from "../../ui/Menus";
 import { useSearchParams } from "react-router-dom";
+import { useCabins } from "./useCabins";
+import Empty from "../../ui/Empty";
 
 function CabinTable() {
-  const {
-    isLoading,
-    data: cabins,
-    error,
-  } = useQuery({
-    queryKey: ["cabins"],
-    queryFn: getCabins,
-  });
+  const { isLoading, cabins, error } = useCabins();
   const [searchParam] = useSearchParams();
-
+  if (isLoading) return <Spinner />;
+  
+  if(!cabins?.length) return <Empty resourceName="cabins"/>
   //FILTER
   let filteredValue = searchParam.get("discount") || "all";
   let filteredCabins;
@@ -28,13 +22,12 @@ function CabinTable() {
     filteredCabins = cabins?.filter((cabin) => cabin.discount > 0);
 
   //SORT
-  const sortBy = searchParam.get("sortBy") || "startDate-asc";;
-  const [field, direction] = sortBy.split("-") 
+  const sortBy = searchParam.get("sortBy") || "startDate-asc";
+  const [field, direction] = sortBy.split("-");
   const modifier = direction === "asc" ? 1 : -1;
   const sortedCabins = filteredCabins?.sort(
     (a, b) => (a[field] - b[field]) * modifier
   );
-  if (isLoading) return <Spinner />;
   return (
     <Menus>
       <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
