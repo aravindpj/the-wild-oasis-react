@@ -58,32 +58,41 @@ const PaginationButton = styled.button`
   }
 `;
 
-function Pagination({count}) {
-  const [searchParam,setSearchParam]=useSearchParams()
-  const currentPage=!searchParam.get("page") ? 1 : Number(searchParam.get("page"))
-  const pageCount=Math.ceil(count/PAGE_SIZE)
-  function next(){
-     const next=currentPage===pageCount ? currentPage : currentPage + 1
-     searchParam.set("page",next)
-     setSearchParam(searchParam)
+function Pagination({ count }) {
+  const [searchParam, setSearchParam] = useSearchParams();
+  const currentPage = !searchParam.get("page")
+    ? 1
+    : Number(searchParam.get("page"));
+  const pageCount = Math.ceil(count / PAGE_SIZE);
+  function next() {
+    const next = currentPage === pageCount ? currentPage : currentPage + 1;
+    searchParam.set("page", next);
+    setSearchParam(searchParam);
   }
-  function prev(){
-     const prev=currentPage===1 ? currentPage : currentPage - 1
-     searchParam.set("page",prev)
-     setSearchParam(searchParam)
+  function prev() {
+    const prev = currentPage === 1 ? currentPage : currentPage - 1;
+    searchParam.set("page", prev);
+    setSearchParam(searchParam);
   }
-  if(pageCount<=1) return null
+  if (pageCount <= 1) return null;
   return (
     <StyledPagination>
       <p>
-        Showing <span>{(currentPage-1)*PAGE_SIZE+1}</span> to <span>{currentPage===pageCount ? count : currentPage * PAGE_SIZE}</span> of <span>{count}</span> results
+        Showing <span>{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
+        <span>
+          {currentPage === pageCount ? count : currentPage * PAGE_SIZE}
+        </span>{" "}
+        of <span>{count}</span> results
       </p>
       <Buttons>
-        <PaginationButton disabled={currentPage===1} onClick={()=>prev()}>
+        <PaginationButton disabled={currentPage === 1} onClick={() => prev()}>
           <HiChevronLeft />
           <span>prev</span>
         </PaginationButton>
-        <PaginationButton disabled={currentPage===pageCount} onClick={()=>next()}>
+        <PaginationButton
+          disabled={currentPage === pageCount}
+          onClick={() => next()}
+        >
           <span>next</span>
           <HiChevronRight />
         </PaginationButton>
