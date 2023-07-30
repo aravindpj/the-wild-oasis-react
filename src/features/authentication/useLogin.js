@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 
 export function useLogin(){
     const navigate=useNavigate()
-    // const queryClient=useQueryClient()
+    const queryClient=useQueryClient()
     const {isLoading,mutate:login}=useMutation({
         mutationFn:({email,password})=>LoginApi(email,password),
         onSuccess:({user})=>{
-        //    queryClient.setQueriesData(["user"],user)
+           queryClient.setQueriesData(["user"],user)
         console.log(user)
            navigate('/dashboard')
         },
