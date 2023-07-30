@@ -23,8 +23,8 @@ function ProtectedRoute({children}) {
     if(isLoading) return <Fillcontainer>
         <Spinner/>
     </Fillcontainer>
-
-    return children
+    console.log(isAuthenticated)
+    if(isAuthenticated) return children
 }
 
 export default ProtectedRoute
