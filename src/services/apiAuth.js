@@ -11,9 +11,11 @@ export async function Signup({fullName,email,password}){
       }
      }
    })
+
    if (error) {
     throw new Error(error.message);
   }
+  
   return data;
 }
 
