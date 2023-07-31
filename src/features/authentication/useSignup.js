@@ -11,5 +11,6 @@ export function useSignup(){
         },
         onError:(err)=>toast.error("There is an error"+err.message)
     })
+    
     return {isLoading,Signup}
 }
