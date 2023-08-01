@@ -17,11 +17,11 @@ export async function getBookings({ filter, sortBy, page }) {
       ascending: sortBy.direction === "asc",
     });
 
-  if(page){
-    const from = (page-1)*PAGE_SIZE
-    const to = page*PAGE_SIZE-1
-    query=query.range(from,to)
-  }  
+  if (page) {
+    const from = (page - 1) * PAGE_SIZE;
+    const to = page * PAGE_SIZE - 1;
+    query = query.range(from, to);
+  }
   const { error, data, count } = await query;
 
   if (error) {
